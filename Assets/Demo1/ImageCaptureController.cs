@@ -19,7 +19,7 @@ using System.Threading;
 namespace MagicLeap
 {
     [RequireComponent(typeof(PrivilegeRequester))]
-    public class ImageCaptureExample : MonoBehaviour
+    public class ImageCaptureController : MonoBehaviour
     {
         [System.Serializable]
         private class ImageCaptureEvent : UnityEvent<Texture2D>

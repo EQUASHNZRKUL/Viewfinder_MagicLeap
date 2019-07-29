@@ -20,7 +20,7 @@ using OpenCVForUnity.ImgprocModule;
 
 namespace MagicLeap
 {
-    public class ImageCaptureVisualizer : MonoBehaviour
+    public class CVController : MonoBehaviour
     {
         #region Private Variables
         [SerializeField, Tooltip("Object to set new images on.")]
