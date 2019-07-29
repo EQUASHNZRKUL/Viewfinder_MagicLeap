@@ -84,26 +84,31 @@ namespace MagicLeap
         }
         #endregion
 
+        #region Event Handlers
         void ArucoDetection() {
             // Detect ArUco markers
             Dictionary dict = Aruco.getPredefinedDictionary(Aruco.DICT_4X4_1000);
             Aruco.detectMarkers(cached_initMat, dict, corners, ids);
             Aruco.drawDetectedMarkers(cached_initMat, corners, ids);
-            Debug.Log("Markers Detected");
-
+            Debug.Log("AD - 93: Markers Detected");
+            Debug.LogFormat("Corners: {0}", corners.Count);
             // Get desired corner of marker
             for (int i = 0; i < corners.Count; i++) {
                 int aruco_id = (int) (ids.get(i, 0)[0]);
                 int src_i = arucoTosrc(aruco_id);
                 int corner_i = aruco_id % 4;
 
+                Debug.LogFormat("AD - 101: aruco_id: {0}; corner_i: {1}; src_i: {2}", aruco_id, corner_i, src_i);
+
                 // Store corner[i] into spa[src_i]
                 src_point_array[src_i] = new Point(corners[i].get(0, corner_i)[0], corners[i].get(0, corner_i)[1]);
 
+                Debug.LogFormat("AD - 106: aruco_id: {0}; corner: {1}; src_i: {2}", aruco_id, src_point_array[src_i], src_i);
+
                 // Display the corner as circle on outMat. 
-                // Imgproc.circle(cached_initMat, src_point_array[src_i], 10, new Scalar(255, 255, 0));
+                Imgproc.circle(cached_initMat, src_point_array[src_i], 10, new Scalar(255, 255, 0));
             }
-            Debug.Log("Corners Extracted")
+            Debug.Log("AD - 107: Corners Extracted");
 
             // Count non-null source points 
             bool spa_full = (count_src_nulls() == 7);
@@ -115,9 +120,9 @@ namespace MagicLeap
             }
 
             Core.flip(cached_initMat, outMat, 0);
+            // outMat = cached_initMat;
         }
-
-        #region Event Handlers
+        
         /// <summary>
         /// Updates preview object with new captured image
         /// </summary>
@@ -130,11 +135,11 @@ namespace MagicLeap
             cached_initMat = new Mat(1080, 1920, CvType.CV_8UC1); 
 
             Debug.LogFormat("equash 48: {0}", (cached_initMat == null));
-            Utils.texture2DToMat(texture, cached_initMat, false, 0);
+            Utils.texture2DToMat(texture, cached_initMat, true, 0);
 
             // Processing the Mat
             ArucoDetection();
-            Debug.Log("Mat Processed");
+            Debug.Log("138: Mat Processed");
 
             Texture2D out_texture = new Texture2D(1920, 1080, TextureFormat.RGBA32, false);
             Utils.matToTexture2D(outMat, out_texture, false, 0);

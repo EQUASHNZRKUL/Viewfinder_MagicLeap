@@ -687,7 +687,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1889385889}
-  - component: {fileID: 1889385891}
   - component: {fileID: 1889385893}
   - component: {fileID: 1889385892}
   - component: {fileID: 1889385890}
@@ -725,35 +724,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _previewObject: {fileID: 2081483295}
---- !u!114 &1889385891
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1889385888}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c6127eaf2b7347c18a2d4784168cbfc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _controllerConnectionHandler: {fileID: 671722724}
-  OnImageReceivedEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: OnImageCaptured
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: MagicLeap.ImageCaptureExample+ImageCaptureEvent, Assembly-CSharp,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!114 &1889385892
 MonoBehaviour:
   m_ObjectHideFlags: 0
