@@ -120,7 +120,6 @@ namespace MagicLeap
             }
 
             Core.flip(cached_initMat, outMat, 0);
-            // outMat = cached_initMat;
         }
         
         /// <summary>

@@ -80,9 +80,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/MagicLeap/Examples/Scenes/ImageCapture.unity
     guid: be6f49865dba3435b80c78e53e77301e
-  - enabled: 1
-    path: Assets/Demo1/Demo1.unity
+  - enabled: 0
+    path: Assets/MLPortDemos/Demo1.unity
     guid: 215fff6f9711b421381f5fe288a1366c
+  - enabled: 1
+    path: Assets/MagicLeap/Examples/Scenes/Planes.unity
+    guid: 5fca2d94f0384ff42b981955c16012ef
   m_configObjects:
     com.unity.xr.arkit.PlayerSettings: {fileID: 11400000, guid: 2d5fb8e61571b4e3897f221189089fd6,
       type: 2}
