@@ -52,6 +52,7 @@ namespace MagicLeap
 
         // Point Lists
         private Vector3[] src_ray_array = new Vector3[FACE_COUNT];
+        private Vector3[] src_world_array = new Vector3[FACE_COUNT];
 
         // Face Lists
         private bool[] faceX_full = new bool[3];
@@ -63,7 +64,7 @@ namespace MagicLeap
             int acc = 0;
             for (int i = 0; i < 7; i++)
             {
-                if (src_point_array[i] == null) {
+                if (src_world_array[i] == null) {
                     acc++; 
                 }
             }
@@ -73,7 +74,7 @@ namespace MagicLeap
         bool check_faces(int face_i) {
             for (int i = 0; i < 4; i++) {
                 int src_i = face_index[face_i, i]; 
-                if (src_point_array[src_i] == null) {
+                if (src_world_array[src_i] == null) {
                     return false; 
                 }
             }
@@ -132,6 +133,9 @@ namespace MagicLeap
             }
             Debug.LogFormat("Detected Direction: {0}", src_ray_array[0]);
             Debug.LogFormat("Camera Direction: {0}", _cam.transform.forward);
+
+            // Setting World Points (via raycast): 
+            
 
             // Count non-null source points 
             bool spa_full = (count_src_nulls() == 7);
