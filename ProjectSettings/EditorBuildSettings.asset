@@ -86,10 +86,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/MagicLeap/Examples/Scenes/Planes.unity
     guid: 5fca2d94f0384ff42b981955c16012ef
-  - enabled: 1
+  - enabled: 0
     path: Assets/MagicLeap/Examples/Scenes/Raycast.unity
     guid: 6c94c849b074e2c4883092293f337b1f
-  - enabled: 0
+  - enabled: 1
     path: Assets/MLPortDemos/Demo2.unity
     guid: ae7d13e8599504b4ba7f88871ecb9ee9
   m_configObjects:
