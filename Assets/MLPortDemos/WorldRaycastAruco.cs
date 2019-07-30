@@ -92,6 +92,7 @@ namespace UnityEngine.XR.MagicLeap
         #region Event Handlers
         public void ArucoRayReceived(Vector3 ray, int index)
         {
+            Debug.LogFormat("WRA: 95 -- Received: {0} to {1}", index, ray);
             direction = ray; 
             aruco_i = index;
         }
@@ -106,6 +107,7 @@ namespace UnityEngine.XR.MagicLeap
         override protected void HandleOnReceiveRaycast(MLWorldRays.MLWorldRaycastResultState state, Vector3 point, Vector3 normal, float confidence)
         {
             RaycastHit result = GetWorldRaycastResult(state, point, normal, confidence);
+            Debug.LogFormat("WRA Invoking: {0} -- {1}", aruco_i, result.transform.position);
             OnArucoRaycastResult.Invoke(state, result, confidence, aruco_i);
 
             _isReady = true;

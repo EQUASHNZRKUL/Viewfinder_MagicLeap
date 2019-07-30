@@ -135,6 +135,7 @@ namespace MagicLeap
                     if (src_point_array[i] != null) {
                         src_ray_array[i] = _cam.ScreenPointToRay(
                             new Vector3((float) src_point_array[i].x,(float) src_point_array[i].y, 0)).direction;
+                        Debug.LogFormat("AD 138 -- Invoking: {0} to {1}", i, src_ray_array[i]);
                         OnArucoRayFound.Invoke(src_ray_array[i], i);
                     }
                 }
