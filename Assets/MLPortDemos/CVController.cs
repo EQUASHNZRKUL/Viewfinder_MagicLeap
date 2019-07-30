@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.XR.MagicLeap;
 
 using OpenCVForUnity;
 using OpenCVForUnity.CoreModule;
@@ -33,6 +34,7 @@ namespace MagicLeap
 
         [System.Serializable]
         private class RaycastTriggerEvent : UnityEvent<Vector3, int>
+        // private class RaycastTriggerEvent : UnityEvent<Vector3>
         {}
 
         [SerializeField, Space]
@@ -96,7 +98,12 @@ namespace MagicLeap
         }
         #endregion
 
-        #region Event Handlers
+        #region Unity Functions
+        private void Awake() {
+            Debug.Log("equash: awake");
+        }
+        #endregion
+
         void ArucoDetection() {
             // Detect ArUco markers
             Dictionary dict = Aruco.getPredefinedDictionary(Aruco.DICT_4X4_1000);
@@ -137,7 +144,6 @@ namespace MagicLeap
 
             // Setting World Points (via raycast): 
 
-
             // Count non-null source points 
             bool spa_full = (count_src_nulls() == 7);
 
@@ -149,7 +155,8 @@ namespace MagicLeap
 
             Core.flip(cached_initMat, outMat, 0);
         }
-        
+
+        #region Event Handlers
         /// <summary>
         /// Updates preview object with new captured image
         /// </summary>
@@ -177,10 +184,12 @@ namespace MagicLeap
                 }
             }
         }
-        #endregion
 
-        private void Awake() {
-            Debug.Log("equash: awake");
+        public void OnRaycastHit(MLWorldRays.MLWorldRaycastResultState state, RaycastHit hit, float confidence, int index)
+        {
+            src_world_array[index] = hit.transform.position;
+            Debug.LogFormat("World Point {0} = {1} w/ confidence {2}", index, src_world_array[index], confidence);
         }
+        #endregion
     }
 }

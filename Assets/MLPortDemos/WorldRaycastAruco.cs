@@ -11,6 +11,7 @@
 // %BANNER_END%
 
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace UnityEngine.XR.MagicLeap
 {
@@ -19,9 +20,19 @@ namespace UnityEngine.XR.MagicLeap
     /// </summary>
     public class WorldRaycastAruco : BaseRaycast
     {
+        #region Public Variables
+        [System.Serializable]
+        public new class RaycastResultEvent : UnityEvent<MLWorldRays.MLWorldRaycastResultState, RaycastHit, float, int> { }
+
+        [Space]
+        [Tooltip("The callback handler for raycast result.")]
+        public new RaycastResultEvent OnRaycastResult;
+        #endregion
+
         #region Private Variables
         private Camera _camera;
         private Vector3 direction;
+        private int aruco_i;  
         #endregion
 
         #region Protected Properties
@@ -79,9 +90,26 @@ namespace UnityEngine.XR.MagicLeap
         #endregion
 
         #region Event Handlers
-        void ArucoRayReceived(Vector3 ray, int index)
+        public void ArucoRayReceived(Vector3 ray, int index)
         {
-            
+            direction = ray; 
+            aruco_i = index;
         }
+
+        /// <summary>
+        /// Callback handler called when raycast call has a result.
+        /// </summary>
+        /// <param name="state"> The state of the raycast result.</param>
+        /// <param name="point"> Position of the hit.</param>
+        /// <param name="normal"> Normal of the surface hit.</param>
+        /// <param name="confidence"> Confidence value on hit.</param>
+        override protected void HandleOnReceiveRaycast(MLWorldRays.MLWorldRaycastResultState state, Vector3 point, Vector3 normal, float confidence)
+        {
+            RaycastHit result = GetWorldRaycastResult(state, point, normal, confidence);
+            OnRaycastResult.Invoke(state, result, confidence, aruco_i);
+
+            _isReady = true;
+        }
+        #endregion
     }
 }
