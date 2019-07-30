@@ -56,10 +56,6 @@ namespace MagicLeap
             _camera = Camera.main; 
         }
 
-        void Start() {
-
-        }
-
         void Update()
         {
             UpdateMarker(); 
