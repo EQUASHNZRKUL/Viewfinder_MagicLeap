@@ -24,11 +24,6 @@ namespace UnityEngine.XR.MagicLeap
         private Vector3 direction;
         #endregion
 
-        public void SetRaycastDirection(Vector3 d)
-        {
-            direction = d;
-        }
-
         #region Protected Properties
         /// <summary>
         /// Returns the position of current headpose.
@@ -82,5 +77,11 @@ namespace UnityEngine.XR.MagicLeap
             }
         }
         #endregion
+
+        #region Event Handlers
+        void ArucoRayReceived(Vector3 ray, int index)
+        {
+            
+        }
     }
 }
