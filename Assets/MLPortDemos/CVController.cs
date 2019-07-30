@@ -98,18 +98,12 @@ namespace MagicLeap
                 int src_i = arucoTosrc(aruco_id);
                 int corner_i = aruco_id % 4;
 
-                Debug.LogFormat("AD - 101: aruco_id: {0}; corner_i: {1}; src_i: {2}", aruco_id, corner_i, src_i);
-
                 // Store corner[i] into spa[src_i]
                 src_point_array[src_i] = new Point(corners[i].get(0, corner_i)[0], corners[i].get(0, corner_i)[1]);
-
-                Debug.LogFormat("AD - 106: aruco_id: {0}; corner: {1}; src_i: {2}", aruco_id, src_point_array[src_i], src_i);
 
                 // Display the corner as circle on outMat. 
                 Imgproc.circle(cached_initMat, src_point_array[src_i], 10, new Scalar(255, 255, 0));
             }
-            Debug.Log("AD - 107: Corners Extracted");
-
             // Count non-null source points 
             bool spa_full = (count_src_nulls() == 7);
 
@@ -129,16 +123,12 @@ namespace MagicLeap
         public void OnImageCaptured(Texture2D texture)
         {
             // Convert Texture to Mat
-            Debug.Log("equash 59: Set Texture Trace");
-            Debug.LogFormat("equash 60: texture h x w x format: {0} x {1} x {2}", texture.height, texture.width, texture.format);
             cached_initMat = new Mat(1080, 1920, CvType.CV_8UC1); 
 
-            Debug.LogFormat("equash 48: {0}", (cached_initMat == null));
             Utils.texture2DToMat(texture, cached_initMat, true, 0);
 
             // Processing the Mat
             ArucoDetection();
-            Debug.Log("138: Mat Processed");
 
             Texture2D out_texture = new Texture2D(1920, 1080, TextureFormat.RGBA32, false);
             Utils.matToTexture2D(outMat, out_texture, false, 0);
@@ -156,7 +146,6 @@ namespace MagicLeap
         #endregion
 
         private void Awake() {
-            Debug.Log("equash: awake");
         }
     }
 }
