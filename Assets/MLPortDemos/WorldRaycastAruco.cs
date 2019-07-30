@@ -22,11 +22,11 @@ namespace UnityEngine.XR.MagicLeap
     {
         #region Public Variables
         [System.Serializable]
-        public new class RaycastResultEvent : UnityEvent<MLWorldRays.MLWorldRaycastResultState, RaycastHit, float, int> { }
+        public class ArucoRaycastResultEvent : UnityEvent<MLWorldRays.MLWorldRaycastResultState, RaycastHit, float, int> { }
 
         [Space]
         [Tooltip("The callback handler for raycast result.")]
-        public new RaycastResultEvent OnRaycastResult;
+        public ArucoRaycastResultEvent OnArucoRaycastResult;
         #endregion
 
         #region Private Variables
@@ -106,7 +106,7 @@ namespace UnityEngine.XR.MagicLeap
         override protected void HandleOnReceiveRaycast(MLWorldRays.MLWorldRaycastResultState state, Vector3 point, Vector3 normal, float confidence)
         {
             RaycastHit result = GetWorldRaycastResult(state, point, normal, confidence);
-            OnRaycastResult.Invoke(state, result, confidence, aruco_i);
+            OnArucoRaycastResult.Invoke(state, result, confidence, aruco_i);
 
             _isReady = true;
         }
