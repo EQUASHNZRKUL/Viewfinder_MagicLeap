@@ -15,6 +15,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 using OpenCVForUnity;
 using OpenCVForUnity.CoreModule;
@@ -30,13 +31,12 @@ namespace MagicLeap
         [SerializeField, Tooltip("Object to set new images on.")]
         private GameObject _previewObject = null;
 
-        // [SerializeField]
-        // Camera m_cam;
-        // public Camera _camera
-        // {
-        //     get {return m_cam; }
-        //     set {m_cam = value; }
-        // }
+        [System.Serializable]
+        private class RaycastTriggerEvent : UnityEvent<Vector3, int>
+        {}
+
+        [SerializeField, Space]
+        private RaycastTriggerEvent OnArucoRayFound = null;
 
         // Constants
         private static int FACE_COUNT = 7; 
@@ -128,6 +128,7 @@ namespace MagicLeap
                     if (src_point_array[i] != null) {
                         src_ray_array[i] = _cam.ScreenPointToRay(
                             new Vector3((float) src_point_array[i].x,(float) src_point_array[i].y, 0)).direction;
+                        OnArucoRayFound.Invoke(src_ray_array[i], i);
                     }
                 }
             }
@@ -135,7 +136,7 @@ namespace MagicLeap
             Debug.LogFormat("Camera Direction: {0}", _cam.transform.forward);
 
             // Setting World Points (via raycast): 
-            
+
 
             // Count non-null source points 
             bool spa_full = (count_src_nulls() == 7);
