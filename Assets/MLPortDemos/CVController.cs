@@ -30,6 +30,17 @@ namespace MagicLeap
         [SerializeField, Tooltip("Object to set new images on.")]
         private GameObject _previewObject = null;
 
+        // [SerializeField]
+        // Camera m_cam;
+        // public Camera _camera
+        // {
+        //     get {return m_cam; }
+        //     set {m_cam = value; }
+        // }
+
+        // Constants
+        private static int FACE_COUNT = 7; 
+
         // Mats
         public Mat outMat = new Mat(1080, 1920, CvType.CV_8UC1);
         private Mat cached_initMat = new Mat (1080, 1920, CvType.CV_8UC1);
@@ -40,7 +51,7 @@ namespace MagicLeap
         private int[,] face_index = { {3, 6, 4, 5}, {0, 1, 3, 6}, {6, 1, 5, 2} };
 
         // Point Lists
-        private Point[] src_point_array = new Point[7];
+        private Vector3[] src_ray_array = new Vector3[FACE_COUNT];
 
         // Face Lists
         private bool[] faceX_full = new bool[3];
@@ -92,7 +103,9 @@ namespace MagicLeap
             Aruco.drawDetectedMarkers(cached_initMat, corners, ids);
             Debug.Log("AD - 93: Markers Detected");
             Debug.LogFormat("Corners: {0}", corners.Count);
+
             // Get desired corner of marker
+            Point[] src_point_array = new Point[FACE_COUNT];
             for (int i = 0; i < corners.Count; i++) {
                 int aruco_id = (int) (ids.get(i, 0)[0]);
                 int src_i = arucoTosrc(aruco_id);
@@ -106,6 +119,19 @@ namespace MagicLeap
                 // Display the corner as circle on outMat. 
                 Imgproc.circle(cached_initMat, src_point_array[src_i], 10, new Scalar(255, 255, 0));
             }
+
+            // Converting to Ray values for Raycast
+            Camera _cam = Camera.main;
+            if (_cam != null) {
+                for (int i = 0; i < FACE_COUNT; i++) {
+                    if (src_point_array[i] != null) {
+                        src_ray_array[i] = _cam.ScreenPointToRay(
+                            new Vector3((float) src_point_array[i].x,(float) src_point_array[i].y, 0)).direction;
+                    }
+                }
+            }
+            Debug.LogFormat("Detected Direction: {0}", src_ray_array[0]);
+            Debug.LogFormat("Camera Direction: {0}", _cam.transform.forward);
 
             // Count non-null source points 
             bool spa_full = (count_src_nulls() == 7);
