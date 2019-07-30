@@ -98,12 +98,15 @@ namespace MagicLeap
                 int src_i = arucoTosrc(aruco_id);
                 int corner_i = aruco_id % 4;
 
+                Debug.LogFormat("AD - 101: aruco_id: {0}; corner_i: {1}; src_i: {2}", aruco_id, corner_i, src_i);
+
                 // Store corner[i] into spa[src_i]
                 src_point_array[src_i] = new Point(corners[i].get(0, corner_i)[0], corners[i].get(0, corner_i)[1]);
 
                 // Display the corner as circle on outMat. 
                 Imgproc.circle(cached_initMat, src_point_array[src_i], 10, new Scalar(255, 255, 0));
             }
+
             // Count non-null source points 
             bool spa_full = (count_src_nulls() == 7);
 
@@ -146,6 +149,7 @@ namespace MagicLeap
         #endregion
 
         private void Awake() {
+            Debug.Log("equash: awake");
         }
     }
 }
