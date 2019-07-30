@@ -93,7 +93,7 @@ namespace MagicLeap
         #region Event Handlers
         private void OnButtonDown(byte controllerId, MLInputControllerButton button)
         {
-            if (_controllerConnectionHandler.IsControllerValid(controllerId) && button == MLInputControllerButton.Bumper)
+            if (_controllerConnectionHandler.IsControllerValid(controllerId) && button == MLInputControllerButton.HomeTap)
                 BumperPress(); 
         }
 
