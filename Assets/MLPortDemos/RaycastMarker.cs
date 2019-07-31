@@ -12,6 +12,7 @@
 
 using UnityEngine;
 using UnityEngine.UI; 
+using UnityEngine.Events; 
 using UnityEngine.XR.MagicLeap;
 
 namespace MagicLeap
@@ -21,6 +22,14 @@ namespace MagicLeap
     /// </summary>
     public class RaycastMarker : MonoBehaviour
     {
+        [System.Serializable]
+        // private class RaycastTriggerEvent : UnityEvent<Vector3, int>
+        private class RaycastTriggerEvent : UnityEvent<Vector3>
+        {}
+
+        [SerializeField, Space]
+        private RaycastTriggerEvent OnWorldpointFound = null;
+
         #region Private Variables
         [SerializeField, Tooltip("The reference to the class to handle results from.")]
         private BaseRaycast _raycast = null;
@@ -139,7 +148,8 @@ namespace MagicLeap
         {
             spawnedObject = Instantiate(m_PlacedPrefab, transform.position, transform.rotation);
             idx++;
-            m_InstructionText.text = string.Format("Placing Marker {0}", idx);
+
+            OnWorldpointFound.Invoke(transform.position);
         }
 
         #endregion

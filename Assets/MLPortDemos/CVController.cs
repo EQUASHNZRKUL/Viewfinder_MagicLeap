@@ -30,14 +30,6 @@ namespace MagicLeap
         [SerializeField, Tooltip("Object to set new images on.")]
         private GameObject _previewObject = null;
 
-        // [SerializeField]
-        // Camera m_cam;
-        // public Camera _camera
-        // {
-        //     get {return m_cam; }
-        //     set {m_cam = value; }
-        // }
-
         // Constants
         private static int FACE_COUNT = 7; 
 
@@ -53,6 +45,9 @@ namespace MagicLeap
         // Point Lists
         private Vector3[] src_ray_array = new Vector3[FACE_COUNT];
         private Vector3[] src_world_array = new Vector3[FACE_COUNT];
+
+        // Index
+        private int world_idx; 
 
         // Face Lists
         private bool[] faceX_full = new bool[3];
@@ -175,6 +170,13 @@ namespace MagicLeap
                     renderer.material.mainTexture = out_texture;
                 }
             }
+        }
+
+        public void OnWorldpointFound(Vector3 world_point) 
+        {
+            Debug.LogFormat("CVC 177: Received marker {0} @ {1}", world_idx, world_point);
+            src_world_array[world_idx] = world_point;
+            world_idx++;
         }
         #endregion
 
