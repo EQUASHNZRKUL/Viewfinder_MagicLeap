@@ -169,7 +169,6 @@ namespace MagicLeap
                 // Update the cursor position and normal.
                 transform.position = result.point;
                 transform.LookAt(result.normal + result.point);
-                transform.localScale = 0.025f*Vector3.one;
 
                 // Set the color to yellow if the hit is unobserved.
                 _render.material.color = (state == MLWorldRays.MLWorldRaycastResultState.HitObserved)? _color : Color.yellow;
