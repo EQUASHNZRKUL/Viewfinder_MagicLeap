@@ -91,6 +91,13 @@ namespace MagicLeap
         }
         #endregion
 
+        #region Unity Methods
+        void Update() 
+        {
+            Debug.LogFormat("Update(): {0}", world_idx);
+        }
+        #endregion
+
         #region Event Handlers
         void ArucoDetection() {
             // Detect ArUco markers
