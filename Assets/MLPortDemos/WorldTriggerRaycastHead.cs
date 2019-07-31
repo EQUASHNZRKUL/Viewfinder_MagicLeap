@@ -18,11 +18,10 @@ namespace UnityEngine.XR.MagicLeap
     /// Encapsulates an ML raycast against the physical world from the headpose position and orientation.
     /// </summary>
     [AddComponentMenu("Magic Leap/Raycast/World Raycast Head")]
-    public class WorldRaycastAruco : BaseRaycast
+    public class WorldTriggerRaycastHead : TriggerRaycast
     {
         #region Private Variables
         private Camera _camera;
-        private Vector3 direction; 
         #endregion
 
         #region Protected Properties
@@ -44,13 +43,7 @@ namespace UnityEngine.XR.MagicLeap
         {
             get
             {
-                Debug.LogFormat("Direction: {0}", direction);
-                if (direction != Vector3.zero)
-                {
-                    Debug.LogFormat("Inside direction: {0}", direction);
-                    return direction; 
-                }
-                return Vector3.zero;
+                return _camera.transform.forward;
             }
         }
 
@@ -79,14 +72,6 @@ namespace UnityEngine.XR.MagicLeap
                 enabled = false;
                 return;
             }
-        }
-        #endregion
-
-        #region Event Handlers
-        public void ArucoRayReceived(Vector3 ray, int index)
-        {
-            Debug.LogFormat("WRA: 95 -- Received: {0} to {1}", index, ray);
-            direction = ray; 
         }
         #endregion
     }

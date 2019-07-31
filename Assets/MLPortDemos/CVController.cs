@@ -186,7 +186,7 @@ namespace MagicLeap
             }
         }
 
-        public void OnRaycastHit(MLWorldRays.MLWorldRaycastResultState state, RaycastHit hit, float confidence, int index)
+        public void OnArucoRaycastHit(MLWorldRays.MLWorldRaycastResultState state, RaycastHit hit, float confidence, int index)
         {
             src_world_array[index] = hit.transform.position;
             Debug.LogFormat("World Point {0} = {1} w/ confidence {2}", index, src_world_array[index], confidence);
