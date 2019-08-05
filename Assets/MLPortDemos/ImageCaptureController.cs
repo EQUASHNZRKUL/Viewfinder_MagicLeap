@@ -83,6 +83,7 @@ namespace MagicLeap
                 if (_isCameraConnected)
                 {
                     MLCamera.OnRawImageAvailable -= OnCaptureRawImageComplete;
+                    MLCamera.OnRawVideoFrameAvailableYUV -= OnCaptureRawVideoFrameComplete; 
                     _isCapturing = false;
                     DisableMLCamera();
                 }
@@ -104,6 +105,7 @@ namespace MagicLeap
                     if (_isCameraConnected)
                     {
                         MLCamera.OnRawImageAvailable -= OnCaptureRawImageComplete;
+                        MLCamera.OnRawVideoFrameAvailableYUV -= OnCaptureRawVideoFrameComplete; 
                         _isCapturing = false;
                         DisableMLCamera();
                     }
@@ -212,6 +214,7 @@ namespace MagicLeap
                 {
                     EnableMLCamera();
                     MLCamera.OnRawImageAvailable += OnCaptureRawImageComplete;
+                    MLCamera.OnRawVideoFrameAvailableYUV += OnCaptureRawVideoFrameComplete; 
                 }
                 MLInput.OnControllerButtonDown += OnButtonDown;
 
@@ -262,6 +265,7 @@ namespace MagicLeap
         /// <param name="imageData">The raw data of the image.</param>
         private void OnCaptureRawImageComplete(byte[] imageData)
         {
+            Debug.LogFormat("OnCaptureRawImageComplete Entered");
             lock (_cameraLockObject)
             {
                 _isCapturing = false;
@@ -277,6 +281,28 @@ namespace MagicLeap
             }
         }
 
+        private void OnCaptureRawVideoFrameComplete(MLCameraResultExtras result_extras, YUVFrameInfo imageInfo, MLCameraFrameMetadata metadata)
+        {
+            Debug.LogFormat("OnCaptureRawVideoFrameComplete Entered");
+            lock (_cameraLockObject)
+            {
+                _isCapturing = false;
+            }
+
+            ulong vcamtimestamp = result_extras.VcamTimestampUs; 
+            byte[] imageData = imageInfo.Y.Data;
+
+            // Initialize to 8x8 texture so there is no discrepency
+            // between uninitalized captures and error texture
+            Texture2D texture = new Texture2D(8, 8);
+            bool status = texture.LoadImage(imageData);
+
+            if (status && (texture.width != 8 && texture.height != 8))
+            {
+                OnImageReceivedEvent.Invoke(texture);
+            }
+        }
+        
         /// <summary>
         /// Worker function to call the API's Capture function
         /// </summary>
