@@ -55,16 +55,18 @@ namespace MagicLeap
         private static int POINT_COUNT = 7; 
         private static int FACE_COUNT = 3; 
         private static float X_OFFSET = -1.0f; 
-        private static float SCALE_FACTOR = 2.0f;
-        public static double HOMOGRAPHY_WIDTH = 1920.0;
-        public static double HOMOGRAPHY_HEIGHT = 1080.0;
+        // private static float SCALE_FACTOR = 2.0f;
+        public static double HOMOGRAPHY_WIDTH = 640.0;
+        public static double HOMOGRAPHY_HEIGHT = 360.0;
         public static int RECT_SIZE = 400; 
+        public static int SCALE_FACTOR = 3; 
 
         // Mats
-        public Mat outMat = new Mat(1080, 1920, CvType.CV_8UC1);
-        private Mat cached_initMat = new Mat (1080, 1920, CvType.CV_8UC1);
-        private Mat warpedMat = new Mat (1080, 1920, CvType.CV_8UC1);
-        private Mat ids = new Mat(1080, 1920, CvType.CV_8UC1);
+        public Mat outMat = new Mat(360, 640, CvType.CV_8UC1);
+        private Mat cached_bigMat = new Mat (1080, 1920, CvType.CV_8UC1);
+        private Mat cached_initMat = new Mat (360, 640, CvType.CV_8UC1);
+        private Mat warpedMat = new Mat (360, 640, CvType.CV_8UC1);
+        private Mat ids = new Mat(360, 640, CvType.CV_8UC1);
         private List<Mat> corners = new List<Mat>();
 
         private Mat[] rectMat_array = new Mat[3];
@@ -179,7 +181,7 @@ namespace MagicLeap
             bool spa_full = (count_src_nulls() == 7);
 
             // Check if have valid faces
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < FACE_COUNT; i++) {
                 // faceX_full[i] = check_faces(i); 
                 faceX_full[i] = check_faces(i); 
             }
@@ -213,7 +215,9 @@ namespace MagicLeap
                     device_camera.WorldToScreenPoint(world_pos, Camera.MonoOrStereoscopicEye.Left);
                     // device_camera.WorldToScreenPoint(world_pos);
 
-                c2_point_array[i] = new Point(c2_vector3.x + 300, c2_vector3.y);
+                // Debug.LogFormat("C2: ({0}, {1}) -> ({2}, {3})", c2_vector3.x + 300, c2_vector3.y, c2_vector3.x/3 + 100, c2_vector3.y/3);
+
+                c2_point_array[i] = new Point((c2_vector3.x + 300) /SCALE_FACTOR, c2_vector3.y/SCALE_FACTOR);
             }
         }
 
@@ -231,22 +235,25 @@ namespace MagicLeap
                     // device_camera.WorldToScreenPoint(world_pos, Camera.MonoOrStereoscopicEye.Left);
                     device_camera.WorldToScreenPoint(world_pos);
 
-                hand_point_array[i] = new Point(c2_vector3.x, c2_vector3.y);
+                hand_point_array[i] = new Point(c2_vector3.x/SCALE_FACTOR, c2_vector3.y/SCALE_FACTOR);
             }
         }
 
         void DrawC2ScreenPoints(ref Mat imageMat) {
             for (int i = 0; i < POINT_COUNT; i++)
             {
-                Imgproc.circle(imageMat, c2_point_array[i], 25, new Scalar(255, 255, 0));
+                Imgproc.circle(imageMat, c2_point_array[i], 24/SCALE_FACTOR, new Scalar(255, 255, 0));
             }
         }
 
         void ShowMat(ref Mat outMat)
         {
             if (out_texture == null) {
-                out_texture = new Texture2D(1920, 1080, TextureFormat.RGBA32, false);
+                out_texture = new Texture2D(640, 360, TextureFormat.RGBA32, false);
             }
+            
+            // Debug.LogFormat("outMat size: {0} \n out_texture size: {1} x {2}", outMat.size(), out_texture.width, out_texture.height);
+
             Utils.matToTexture2D(outMat, out_texture, false, 0);
 
             if(_previewObject != null)
@@ -257,11 +264,13 @@ namespace MagicLeap
                 {
                     renderer.material.mainTexture = out_texture;
                 }
+                // _previewObject.transform.localScale = _previewObject.transform.localScale * 4;
+                // _previewObject.transform.localScale = new Vector3(1.2f, 0.8f, 1);
             }
         }
 
         void Rectify(ref Point[] face_point_array, int i) {
-            rectMat_array[i] = new Mat (1080, 1920, CvType.CV_8UC1);
+            rectMat_array[i] = new Mat (360, 640, CvType.CV_8UC1);
             
             Point[] reg_point_array = new Point[4];
             reg_point_array[0] = new Point(0.0, HOMOGRAPHY_HEIGHT);
@@ -282,8 +291,9 @@ namespace MagicLeap
         }
 
         void GetFaces(ref Point[] source_points) {
-            for (int i = 0; i < 3; i++) { // i :: face count
+            for (int i = 0; i < FACE_COUNT; i++) { // i :: face count
                 if (faceX_full[i]) { // For each valid face
+                    Debug.LogFormat("Getting Face {0}", i);
                     // Build Face Point Array
                     Point[] face_point_array = new Point[4]; 
                     for (int j = 0; j < 4; j++) { // j :: face point count
@@ -298,17 +308,17 @@ namespace MagicLeap
 
         void ShowFaces() {
             if (faceX_full[0]) {
-                Texture2D topTexture1 = new Texture2D(1920, 1080, TextureFormat.RGBA32, false);
+                Texture2D topTexture1 = new Texture2D(640, 360, TextureFormat.RGBA32, false);
                 Utils.matToTexture2D(rectMat_array[0], topTexture1, false, 0);
                 m_TopImage1.texture = (Texture) topTexture1;
             }
             if (faceX_full[1]) {
-                Texture2D topTexture2 = new Texture2D(1920, 1080, TextureFormat.RGBA32, false);
+                Texture2D topTexture2 = new Texture2D(640, 360, TextureFormat.RGBA32, false);
                 Utils.matToTexture2D(rectMat_array[1], topTexture2, false, 0);
                 m_TopImage2.texture = (Texture) topTexture2;
             }
             if (faceX_full[2]) {
-                Texture2D topTexture3 = new Texture2D(1920, 1080, TextureFormat.RGBA32, false);
+                Texture2D topTexture3 = new Texture2D(640, 360, TextureFormat.RGBA32, false);
                 Utils.matToTexture2D(rectMat_array[2], topTexture3, false, 0);
                 m_TopImage3.texture = (Texture) topTexture3;
             }
@@ -322,7 +332,7 @@ namespace MagicLeap
 
         void HomographyTransform(int i, ref Point[] proj_point_array) {
             // Init homography result Mat
-            homoMat_array[i] = new Mat (480, 640, CvType.CV_8UC1);
+            homoMat_array[i] = new Mat (360, 640, CvType.CV_8UC1);
 
             // Init regular point array
             Point[] reg_point_array = new Point[4]; 
@@ -351,6 +361,7 @@ namespace MagicLeap
         void Awake()
         {
             // _camera = Camera.main; 
+            _previewObject.SetActive(false);
         }
 
         void Update() 
@@ -364,7 +375,7 @@ namespace MagicLeap
             }
 
             // STAGE III
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < FACE_COUNT; i++) {
                 HomographyTransform(i, ref hand_point_array);
             }
             CombineWarped();
@@ -382,10 +393,13 @@ namespace MagicLeap
         public void OnImageCaptured(Texture2D texture)
         {
             // Convert Texture to Mat and store as cached_initMat
-            cached_initMat = new Mat(1080, 1920, CvType.CV_8UC1); 
-            Utils.texture2DToMat(texture, cached_initMat, false, 0);
+            cached_bigMat = new Mat(1080, 1920, CvType.CV_8UC1);
+            cached_initMat = new Mat(360, 640, CvType.CV_8UC1); 
+            
+            Utils.texture2DToMat(texture, cached_bigMat, false, 0);
+            Imgproc.resize(cached_bigMat, cached_initMat, new Size(640, 360), 1.0/SCALE_FACTOR, 1.0/SCALE_FACTOR, 1);
 
-            out_texture = new Texture2D(1920, 1080, TextureFormat.RGBA32, false);
+            out_texture = new Texture2D(640, 360, TextureFormat.RGBA32, false);
 
             // Finds existing screen points
             SetC2ScreenPoints();
@@ -403,7 +417,7 @@ namespace MagicLeap
             src_world_array[world_idx] = world_point;
             world_idx++;
 
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < FACE_COUNT; i++) {
                 faceX_full[i] = check_faces(i); 
             }
 
